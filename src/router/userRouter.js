@@ -94,5 +94,20 @@ userRouter.patch("/updateUser/:id", async (req, res) => {
   }
 });
 // ------------------update user by id-----------------------
+// ------------------delete user by id-----------------------
+userRouter.delete("/deleteUser/:id", async (req, res) => {
+  // 1.get id from URL bar
+  const id = req.params.id;
+  // 2.check user exist or not
+  const existingser = await User.findById(id);
+  if (!existingser) {
+    throw new Error("user not found");
+  }
+  // 3.delete user
+  await User.findByIdAndDelete(id);
+  // 4.send response back
+  res.status(200).json({ message: "user deleted successfully" });
+});
+// ------------------delete user by id-----------------------
 
 export default userRouter;
