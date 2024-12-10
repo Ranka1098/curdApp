@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 
 const userRouter = express.Router();
 
+// ------------------user created-----------------------
 userRouter.post("/createUser", async (req, res) => {
   try {
     // 1.extract user form req body
@@ -34,5 +35,20 @@ userRouter.post("/createUser", async (req, res) => {
     res.status(400).send("user not d into database");
   }
 });
+// ------------------user created-----------------------
+
+// ------------------get all user-----------------------
+userRouter.get("/getAllUser", async (req, res) => {
+  try {
+    const userData = await User.find();
+    if (!userData) {
+      return res.status(404).send({ message: "Users not found" });
+    }
+    return res.status(200).send({ message: "all user", data: userData });
+  } catch (error) {
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+// ------------------get all user-----------------------
 
 export default userRouter;
