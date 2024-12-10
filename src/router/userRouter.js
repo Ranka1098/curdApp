@@ -53,7 +53,7 @@ userRouter.get("/getAllUser", async (req, res) => {
 });
 // ------------------get all user-----------------------
 
-// ------------------get single user-----------------------
+// ------------------get single user by id-----------------------
 userRouter.get("/singleUser/:id", async (req, res) => {
   try {
     // 1.get user id by param
@@ -61,13 +61,38 @@ userRouter.get("/singleUser/:id", async (req, res) => {
     // 2.find user by id
     const singleUser = await User.findById(id);
     if (!singleUser) {
-      res.status(404).json({ msg: "user not found" });
+      return res.status(404).json({ msg: "user not found" });
     }
     res.status(200).json({ msg: "user by id : ", data: singleUser });
   } catch (error) {
     res.status(500).json({ error: error });
   }
 });
-// ------------------get single user-----------------------
+// ------------------get single user by id-----------------------
+// ------------------update user by id-----------------------
+userRouter.patch("/updateUser/:id", async (req, res) => {
+  try {
+    // 1.get user id from URL
+    const id = req.params.id;
+    // 2.get user data from body
+    const updateData = req.body;
+    // 3.check user exist or not
+    const existingUser = await User.findById(id);
+    if (!existingUser) {
+      throw new Error("user not found");
+    }
+    //4.update user in MongoDB
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+    // 5.send back response
+    res
+      .status(200)
+      .json({ msg: "updated  user successfully", data: updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+// ------------------update user by id-----------------------
 
 export default userRouter;
