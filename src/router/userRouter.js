@@ -16,7 +16,7 @@ userRouter.post("/createUser", async (req, res) => {
     }
 
     // 3.check email already exist or not
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne(email);
     if (existingUser) {
       return res.status(404).json({ message: "email is all ready exit" });
     }
@@ -40,7 +40,9 @@ userRouter.post("/createUser", async (req, res) => {
 // ------------------get all user-----------------------
 userRouter.get("/getAllUser", async (req, res) => {
   try {
+    // 1.find method return all user from DB
     const userData = await User.find();
+    // 2.check user exits or not
     if (!userData) {
       return res.status(404).send({ message: "Users not found" });
     }
@@ -50,5 +52,22 @@ userRouter.get("/getAllUser", async (req, res) => {
   }
 });
 // ------------------get all user-----------------------
+
+// ------------------get single user-----------------------
+userRouter.get("/singleUser/:id", async (req, res) => {
+  try {
+    // 1.get user id by param
+    const id = req.params.id;
+    // 2.find user by id
+    const singleUser = await User.findById(id);
+    if (!singleUser) {
+      res.status(404).json({ msg: "user not found" });
+    }
+    res.status(200).json({ msg: "user by id : ", data: singleUser });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+// ------------------get single user-----------------------
 
 export default userRouter;
