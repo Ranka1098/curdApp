@@ -16,7 +16,7 @@ userRouter.post("/createUser", async (req, res) => {
     }
 
     // 3.check email already exist or not
-    const existingUser = await User.findOne(email);
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(404).json({ message: "email is all ready exit" });
     }
@@ -30,9 +30,9 @@ userRouter.post("/createUser", async (req, res) => {
     // 6.save user into database
     await newUser.save();
 
-    res.send("user added into databse sucessfully ");
+    res.status(200).json({ msg: "user added into databse sucessfully " });
   } catch (error) {
-    res.status(400).send("user not d into database");
+    res.status(400).send("user not saved into database");
   }
 });
 // ------------------user created-----------------------
@@ -44,11 +44,11 @@ userRouter.get("/getAllUser", async (req, res) => {
     const userData = await User.find();
     // 2.check user exits or not
     if (!userData) {
-      return res.status(404).send({ message: "Users not found" });
+      return res.status(404).json({ msg: "Users not found" });
     }
-    return res.status(200).send({ message: "all user", data: userData });
+    return res.status(200).json({ msg: "all user", data: userData });
   } catch (error) {
-    res.status(500).send({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 // ------------------get all user-----------------------
@@ -70,7 +70,7 @@ userRouter.get("/singleUser/:id", async (req, res) => {
 });
 // ------------------get single user by id-----------------------
 // ------------------update user by id-----------------------
-userRouter.patch("/updateUser/:id", async (req, res) => {
+userRouter.put("/updateUser/:id", async (req, res) => {
   try {
     // 1.get user id from URL
     const id = req.params.id;

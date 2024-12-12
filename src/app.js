@@ -1,11 +1,13 @@
 import express from "express";
 import connectDB from "./config/database.js";
 import userRouter from "./router/userRouter.js";
+import cors from "cors";
 
 const app = express();
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
+app.use(cors());
 
 // ---------------------------routers-------------------------------
 app.use("/", userRouter);
